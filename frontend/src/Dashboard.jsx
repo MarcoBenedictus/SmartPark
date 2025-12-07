@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend } from 'recharts';
+import {
+  BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer,
+  PieChart, Pie, Cell, Legend, LabelList
+} from 'recharts';
 
 const Dashboard = () => {
   const [lots, setLots] = useState([]);
@@ -10,6 +13,9 @@ const Dashboard = () => {
   // analytics state
   const [stats, setStats] = useState(null);
   const [viewMode, setViewMode] = useState('GRID');
+
+  // carousel state
+  const [currentLotIndex, setCurrentLotIndex] = useState(0);
 
   // create form state
   const [newLotName, setNewLotName] = useState('');
@@ -73,6 +79,19 @@ const Dashboard = () => {
     const interval = setInterval(fetchParkingData, 2000);
     return () => clearInterval(interval);
   }, [navigate, token]);
+
+  // CAROUSEL LOGIC
+  const nextLot = () => {
+    if (stats && stats.lotStats) {
+      setCurrentLotIndex((prev) => (prev + 1) % stats.lotStats.length);
+    }
+  };
+
+  const prevLot = () => {
+    if (stats && stats.lotStats) {
+      setCurrentLotIndex((prev) => (prev - 1 + stats.lotStats.length) % stats.lotStats.length);
+    }
+  };
 
   // Helper function to actually do the update 
   const toggleSlotStatus = async (slot) => {
@@ -223,6 +242,17 @@ const Dashboard = () => {
 
   if (loading) return <div className="min-h-screen bg-[#050914] flex items-center justify-center text-white">Loading</div>;
 
+  // Prepare Single Lot Data for Carousel
+  const rawLotData = (stats && stats.lotStats && stats.lotStats.length > 0)
+    ? stats.lotStats[currentLotIndex]
+    : null;
+
+  const currentLotStats = rawLotData ? [{
+    name: rawLotData.name,
+    occupied: rawLotData.occupied,
+    slotsLeft: rawLotData.capacity - rawLotData.occupied // Calculation for the unoccupied slots
+  }] : [];
+
   return (
     <div className="min-h-screen bg-[#050914] font-sans pb-20 relative">
 
@@ -276,7 +306,7 @@ const Dashboard = () => {
               SmartPark <span className="text-[#564DEA]">Manager</span>
             </h1>
           </div>
-          
+
           <div className="flex items-center gap-6">
 
             {/* VIEW SWITCHER (ADMIN ONLY) */}
@@ -467,22 +497,62 @@ const Dashboard = () => {
               </div>
             </div>
 
-            {/* BAR CHART */}
-            <div className="bg-[#0F1629] p-8 rounded-[2rem] shadow-2xl border border-gray-800">
-              <h3 className="text-xl font-bold text-white mb-6">Occupancy per Mall</h3>
-              <div className="h-64 w-full">
-                <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={stats.lotStats}>
-                    <XAxis dataKey="name" stroke="#9CA3AF" tick={{ fill: '#9CA3AF' }} tickLine={false} axisLine={false} />
-                    <YAxis stroke="#9CA3AF" tick={{ fill: '#9CA3AF' }} tickLine={false} axisLine={false} />
-                    <Tooltip
-                      contentStyle={{ backgroundColor: '#1A233A', border: '1px solid #374151', borderRadius: '10px', color: '#fff' }}
-                      cursor={{ fill: 'rgba(255,255,255,0.05)' }}
-                    />
-                    <Bar dataKey="occupied" name="Occupied" fill="#564DEA" radius={[4, 4, 0, 0]} />
-                    <Bar dataKey="capacity" name="Total Capacity" fill="#1F2937" radius={[4, 4, 0, 0]} />
-                  </BarChart>
-                </ResponsiveContainer>
+            {/* CAROUSEL BAR CHART */}
+            <div className="bg-[#0F1629] p-8 rounded-[2rem] shadow-2xl border border-gray-800 flex flex-col">
+              <h3 className="text-xl font-bold text-white mb-6 text-center">Occupancy per Lot</h3>
+
+              <div className="flex items-center justify-between flex-1 gap-2">
+
+                {/* PREV BUTTON */}
+                <button
+                  onClick={prevLot}
+                  className="p-3 bg-[#1A233A] text-white rounded-full hover:bg-[#564DEA] transition-all border border-gray-700 hover:border-transparent shadow-lg"
+                >
+                  ◀
+                </button>
+
+                {/* CHART CONTAINER */}
+                <div className="h-64 w-full">
+                  {currentLotStats.length > 0 ? (
+                    <ResponsiveContainer width="100%" height="100%">
+                      <BarChart data={currentLotStats} barSize={60}>
+                        <XAxis dataKey="name" stroke="#9CA3AF" tick={{ fill: '#9CA3AF' }} tickLine={false} axisLine={false} />
+                        <YAxis hide domain={[0, rawLotData?.capacity || 'auto']} />
+
+                        <Tooltip
+                          contentStyle={{ backgroundColor: '#1A233A', border: '1px solid #374151', borderRadius: '10px', color: '#fff' }}
+                          cursor={{ fill: 'rgba(255,255,255,0.05)' }}
+                        />
+                        {/* Occupied bar */}
+                        <Bar dataKey="occupied" name="Occupied" fill="#EF4444" radius={[4, 4, 0, 0]}>
+                          <LabelList dataKey="occupied" position="center" fill="#ffffff" fontWeight="bold" />
+                        </Bar>
+
+                        {/* Unoccupied bar */}
+                        <Bar dataKey="slotsLeft" name="Slots Left" fill="#10B981" radius={[4, 4, 0, 0]}>
+                          <LabelList dataKey="slotsLeft" position="center" fill="#ffffff" fontWeight="bold" />
+                        </Bar>
+                      </BarChart>
+                    </ResponsiveContainer>
+                  ) : (
+                    <div className="flex items-center justify-center h-full text-gray-500">No data available</div>
+                  )}
+                </div>
+
+                {/* NEXT BUTTON */}
+                <button
+                  onClick={nextLot}
+                  className="p-3 bg-[#1A233A] text-white rounded-full hover:bg-[#564DEA] transition-all border border-gray-700 hover:border-transparent shadow-lg"
+                >
+                  ▶
+                </button>
+              </div>
+
+              {/* Indicator Dots */}
+              <div className="flex justify-center gap-2 mt-4">
+                {stats.lotStats && stats.lotStats.map((_, idx) => (
+                  <div key={idx} className={`h-2 w-2 rounded-full transition-all ${idx === currentLotIndex ? 'bg-[#564DEA] w-4' : 'bg-gray-700'}`}></div>
+                ))}
               </div>
             </div>
 
