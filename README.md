@@ -168,3 +168,13 @@ I have created a script allowing you to initialize and run the entire web withou
     * Open `http://localhost:5173`
     * **Admin Credentials:** `admin@smartpark.com` / `secretpass99`
     * **User Credentials:** `user@smartpark.com` / `secretpass99`
+
+## 8. Functional Testing & Demo Vid
+
+### API Test Collection
+We have provided a Postman collection to test all API endpoints (Auth, CRUD, Booking, Analytics).
+* **[Download Postman Collection:](./SmartPark_API.postman_collection.json)**
+* *Instructions:* Import this file into Postman to see all pre-configured requests.
+
+### Functional Demo
+[Soon]
