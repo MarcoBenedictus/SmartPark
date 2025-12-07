@@ -44,7 +44,7 @@ I chose a relational database (PostgreSQL) because the data structure is strictl
 * **Recharts:** Mainly used for the Analytics Dashboard.
 * **Vite:** To help with development process, simply because it allows real time updates to the Frontend UI without refreshing the page multiple times.
 
-Overall, PERN (Postgre, Express, React, Node.js) is a good choice for this Project, having the advantage in Strong, Consistent Relational Database, and being able to use the SQL Database inside a Javascript Environment.
+Overall, PERN (Postgre, Express, React, Node.js) is a good choice for this Project, having the advantage in Strong, Consistent Relational Database, and being able to use the SQL Database Query inside a Javascript Environment.
 
 ## 4. Features Implemented
 
@@ -72,11 +72,11 @@ Implemented a visualization tab for Admins using `Recharts`:
 How Errors are Handled
 I implemented an error handling strategy as such:
 
-### Backend: All Controllers use try/catch blocks. If an operation fails (e.g., DB connection lost), the server responds with a standard error format: res.status(500).json({ message: "Error description" }).
+* Backend: All Controllers use try/catch blocks. If an operation fails (e.g., DB connection lost), the server responds with a standard error format: res.status(500).json({ message: "Error description" }).
 
-### Auth Errors: Middleware intercepts unauthenticated requests, returning 401 Unauthorized before they reach the logic layer.
+* Auth Errors: Middleware intercepts unauthenticated requests, returning 401 Unauthorized before they reach the logic layer.
 
-### Frontend: Axios interceptors and try/catch blocks capture API errors. For example, if a user tries to book a second slot, the backend returns 400 Bad Request, and the frontend displays a warning that: "You already have an active slot."
+* Frontend: Axios interceptors and try/catch blocks capture API errors. For example, if a user tries to book a second slot, the backend returns 400 Bad Request, and the frontend displays a warning that: "You already have an active slot."
 
 ## Challenges & Solutions
 ### Challenge 1: Real-Time Updates without WebSockets
@@ -93,9 +93,9 @@ I implemented an error handling strategy as such:
 
 ### Challenge 3: Preventing Administrative Overwrites
 
-**Problem:** An Admin simulating IoT data might accidentally kick out a User who reserved a spot, unable to give it back.
+1. **Problem:** An Admin simulating IoT data might accidentally kick out a User who reserved a spot, unable to give it back.
 
-**Solution:** To avoid having to contact the Customer, wasting resources, I implemented a Custom Modal Interceptor in the Frontend. If an Admin tries to toggle a RESERVED slot, the app interrupts the action and asks for explicit confirmation before overriding said slot.
+2. **Solution:** To avoid having to contact the Customer, wasting resources, I implemented a Custom Modal Interceptor in the Frontend. If an Admin tries to toggle a RESERVED slot, the app interrupts the action and asks for explicit confirmation before overriding said slot.
 
 ### Future Improvements / Refactoring
 If given another week, I would:
@@ -143,9 +143,13 @@ I have created a script allowing you to initialize and run the entire web withou
 
 2.  **Install Dependencies (Root, Backend, & Frontend):**
 
+    ```
     npm init -y
-    npm install concurrently --save-dev 
+    ```
     *just incase Concurrently fails downloading through package*
+    ```
+    npm install concurrently --save-dev 
+    ```
     ```
     npm run install-all
     ```
