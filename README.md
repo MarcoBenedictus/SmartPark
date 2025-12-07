@@ -143,10 +143,10 @@ I have created a script allowing you to initialize and run the entire web withou
 
 2.  **Install Dependencies (Root, Backend, & Frontend):**
 
+    *just incase Concurrently fails downloading through package*
     ```
     npm init -y
     ```
-    *just incase Concurrently fails downloading through package*
     ```
     npm install concurrently --save-dev 
     ```
