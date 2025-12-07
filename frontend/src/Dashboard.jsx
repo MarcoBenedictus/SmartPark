@@ -9,7 +9,7 @@ const Dashboard = () => {
 
   // analytics state
   const [stats, setStats] = useState(null);
-  const [viewMode, setViewMode] = useState('GRID'); 
+  const [viewMode, setViewMode] = useState('GRID');
 
   // create form state
   const [newLotName, setNewLotName] = useState('');
@@ -51,10 +51,10 @@ const Dashboard = () => {
       // Stats Data (Admin)
       if (isAdmin) {
         try {
-            const resStats = await axios.get('http://localhost:5000/api/parking/stats', {
-                headers: { Authorization: `Bearer ${token}` }
-            });
-            setStats(resStats.data);
+          const resStats = await axios.get('http://localhost:5000/api/parking/stats', {
+            headers: { Authorization: `Bearer ${token}` }
+          });
+          setStats(resStats.data);
         } catch (e) { console.error("Stats fetch failed", e); }
       }
 
@@ -197,11 +197,29 @@ const Dashboard = () => {
     return slot.status;
   };
 
-  // BONUS : PIE DATA PREP
+  // PIE DATA PREP
   const pieData = stats ? [
-    { name: 'Available', value: stats.systemStats.totalAvailable, color: '#10B981' }, 
-    { name: 'Occupied', value: stats.systemStats.totalOccupied, color: '#EF4444' }, 
+    { name: 'Available', value: stats.systemStats.totalAvailable, color: '#10B981' },
+    { name: 'Occupied', value: stats.systemStats.totalOccupied, color: '#EF4444' },
   ] : [];
+
+  // CUSTOM TOOLTIP
+  const CustomTooltip = ({ active, payload }) => {
+    if (active && payload && payload.length) {
+      const item = payload[0];
+      return (
+        <div className="bg-[#1F2937] border border-gray-700 p-4 rounded-xl shadow-2xl">
+          <p className="text-white font-bold text-lg mb-1">{item.name}</p>
+          <p className="text-gray-300">Count: <span className="text-white font-mono">{item.value}</span></p>
+          <div className="h-px bg-gray-700 my-2"></div>
+          <p className="text-gray-400 text-sm">
+            Total System Capacity: <span className="text-white font-bold">{stats?.systemStats.totalSlots}</span>
+          </p>
+        </div>
+      );
+    }
+    return null;
+  };
 
   if (loading) return <div className="min-h-screen bg-[#050914] flex items-center justify-center text-white">Loading</div>;
 
@@ -258,31 +276,35 @@ const Dashboard = () => {
               SmartPark <span className="text-[#564DEA]">Manager</span>
             </h1>
           </div>
+          
+          <div className="flex items-center gap-6">
 
-          {/* VIEW SWITCHER (ADMIN) */}
-          {isAdmin && (
-            <div className="flex bg-[#1A233A] p-1 rounded-xl border border-gray-700">
-                <button 
-                    onClick={() => setViewMode('GRID')}
-                    className={`px-4 py-2 rounded-lg text-sm font-bold transition-all ${viewMode === 'GRID' ? 'bg-[#564DEA] text-white shadow-lg' : 'text-gray-400 hover:text-white'}`}
+            {/* VIEW SWITCHER (ADMIN ONLY) */}
+            {isAdmin && (
+              <div className="flex bg-[#1A233A] p-1 rounded-lg border border-gray-700">
+                <button
+                  onClick={() => setViewMode('GRID')}
+                  className={`px-4 py-2 rounded-md text-sm font-bold transition-all ${viewMode === 'GRID' ? 'bg-[#564DEA] text-white shadow-lg' : 'text-gray-400 hover:text-white'}`}
                 >
-                    🅿️ Parking Lots
+                  🅿️ Parking Lots
                 </button>
-                <button 
-                    onClick={() => setViewMode('ANALYTICS')}
-                    className={`px-4 py-2 rounded-lg text-sm font-bold transition-all ${viewMode === 'ANALYTICS' ? 'bg-[#564DEA] text-white shadow-lg' : 'text-gray-400 hover:text-white'}`}
+                <button
+                  onClick={() => setViewMode('ANALYTICS')}
+                  className={`px-4 py-2 rounded-md text-sm font-bold transition-all ${viewMode === 'ANALYTICS' ? 'bg-[#564DEA] text-white shadow-lg' : 'text-gray-400 hover:text-white'}`}
                 >
-                    📊 Analytics
+                  📊 Analytics
                 </button>
-            </div>
-          )}
+              </div>
+            )}
 
-          <button
-            onClick={handleLogout}
-            className="bg-red-500/10 hover:bg-red-500/20 text-red-500 border border-red-500/50 px-5 py-2 rounded-xl text-sm transition-all"
-          >
-            Logout
-          </button>
+            <button
+              onClick={handleLogout}
+              className="bg-red-500/10 hover:bg-red-500/20 text-red-500 border border-red-500/50 px-5 py-2 rounded-xl text-sm transition-all"
+            >
+              Logout
+            </button>
+          </div>
+
         </div>
       </nav>
 
@@ -290,95 +312,95 @@ const Dashboard = () => {
 
         {/* LIVE GRID */}
         {viewMode === 'GRID' && (
-        <>
+          <>
             {/* CREATE FORM */}
             {isAdmin && (
-            <div className="bg-[#0F1629] p-6 rounded-[2rem] shadow-xl border border-gray-800 mb-8">
+              <div className="bg-[#0F1629] p-6 rounded-[2rem] shadow-xl border border-gray-800 mb-8">
                 <h3 className="font-bold text-white mb-4 text-lg">✚ Add New Parking Lot</h3>
                 <form onSubmit={handleCreateLot} className="flex flex-col sm:flex-row gap-4">
-                <input
+                  <input
                     className={`w-full ${inputStyle}`}
                     placeholder="Lot Name"
                     value={newLotName}
                     onChange={e => setNewLotName(e.target.value)}
-                />
-                <input
+                  />
+                  <input
                     className={`w-full sm:w-32 ${inputStyle}`}
                     type="number"
                     placeholder="Slots"
                     value={newLotCapacity}
                     onChange={e => setNewLotCapacity(e.target.value)}
-                />
-                <button className="bg-[#564DEA] hover:bg-[#463DCA] text-white px-8 py-2 rounded-xl font-semibold shadow-lg shadow-indigo-500/30 transition-all">
+                  />
+                  <button className="bg-[#564DEA] hover:bg-[#463DCA] text-white px-8 py-2 rounded-xl font-semibold shadow-lg shadow-indigo-500/30 transition-all">
                     ✚ Add
-                </button>
+                  </button>
                 </form>
-            </div>
+              </div>
             )}
 
             {/* LOTS LOOP */}
             <div className="space-y-8">
-            {lots.map((lot) => (
+              {lots.map((lot) => (
                 <div key={lot.id} className="bg-[#0F1629] rounded-[2rem] shadow-2xl border border-gray-800 overflow-hidden">
 
-                {/* HEADER */}
-                <div className="bg-[#131b31] px-6 py-5 border-b border-gray-800 flex justify-between items-center">
+                  {/* HEADER */}
+                  <div className="bg-[#131b31] px-6 py-5 border-b border-gray-800 flex justify-between items-center">
 
                     {editingId === lot.id ? (
-                    // EDIT MODE
-                    <div className="flex gap-2 items-center w-full">
+                      // EDIT MODE
+                      <div className="flex gap-2 items-center w-full">
                         <input
-                        className={inputStyle}
-                        value={editName}
-                        onChange={e => setEditName(e.target.value)}
+                          className={inputStyle}
+                          value={editName}
+                          onChange={e => setEditName(e.target.value)}
                         />
                         <input
-                        className={`w-24 ${inputStyle}`}
-                        type="number"
-                        value={editCapacity}
-                        onChange={e => setEditCapacity(e.target.value)}
+                          className={`w-24 ${inputStyle}`}
+                          type="number"
+                          value={editCapacity}
+                          onChange={e => setEditCapacity(e.target.value)}
                         />
                         <button onClick={() => saveEdit(lot.id)} className="bg-emerald-500 text-white px-4 py-2 rounded-xl text-sm hover:bg-emerald-600 transition-colors">Save</button>
                         <button onClick={() => setEditingId(null)} className="text-gray-400 hover:text-white text-sm px-2">Cancel</button>
-                    </div>
+                      </div>
                     ) : (
-                    // VIEW MODE
-                    <h2 className="text-xl font-bold text-white flex items-center gap-3">
+                      // VIEW MODE
+                      <h2 className="text-xl font-bold text-white flex items-center gap-3">
                         🏬 {lot.name}
                         <span className="text-xs font-normal text-gray-400 bg-[#1A233A] border border-gray-700 px-3 py-1 rounded-full">
-                        Capacity: {lot.capacity}
+                          Capacity: {lot.capacity}
                         </span>
-                    </h2>
+                      </h2>
                     )}
 
                     {/* ACTION BUTTONS */}
                     {isAdmin && editingId !== lot.id && (
-                    <div className="flex gap-2">
+                      <div className="flex gap-2">
                         <button
-                        onClick={() => startEditing(lot)}
-                        className="text-[#564DEA] hover:bg-[#564DEA]/10 px-3 py-2 rounded-lg border border-[#564DEA]/30 text-sm transition-all"
+                          onClick={() => startEditing(lot)}
+                          className="text-[#564DEA] hover:bg-[#564DEA]/10 px-3 py-2 rounded-lg border border-[#564DEA]/30 text-sm transition-all"
                         >
-                        ✏️ Edit
+                          ✏️ Edit
                         </button>
                         <button
-                        onClick={() => handleDeleteLot(lot.id)}
-                        className="text-red-400 hover:bg-red-500/10 px-3 py-2 rounded-lg border border-red-500/30 text-sm transition-all"
+                          onClick={() => handleDeleteLot(lot.id)}
+                          className="text-red-400 hover:bg-red-500/10 px-3 py-2 rounded-lg border border-red-500/30 text-sm transition-all"
                         >
-                        🗑️ Delete
+                          🗑️ Delete
                         </button>
-                    </div>
+                      </div>
                     )}
-                </div>
+                  </div>
 
-                {/* SLOTS CONTAINER */}
-                <div className="p-8">
+                  {/* SLOTS CONTAINER */}
+                  <div className="p-8">
                     <div className="flex flex-wrap justify-center gap-3">
-                    {lot.slots && lot.slots.map((slot) => {
+                      {lot.slots && lot.slots.map((slot) => {
                         const isMySlot = slot.reservedBy === myId;
                         const canInteract = isAdmin || slot.status === 'AVAILABLE' || isMySlot;
 
                         return (
-                        <button
+                          <button
                             key={slot.id}
                             onClick={() => handleSlotAction(slot)}
                             disabled={!canInteract}
@@ -390,97 +412,96 @@ const Dashboard = () => {
                             ${getSlotStyles(slot)}
                             ${canInteract ? 'hover:scale-105 cursor-pointer' : 'cursor-not-allowed opacity-40'}
                             `}
-                        >
+                          >
                             <span className="text-sm font-bold tracking-widest opacity-80">{slot.slot_number}</span>
 
                             <div className="mt-2 text-4xl">
-                            {getSlotIcon(slot)}
+                              {getSlotIcon(slot)}
                             </div>
 
                             <span className="text-[10px] uppercase font-bold mt-1 tracking-wider opacity-90">
-                            {getSlotLabel(slot)}
+                              {getSlotLabel(slot)}
                             </span>
-                        </button>
+                          </button>
                         );
-                    })}
+                      })}
                     </div>
+                  </div>
                 </div>
-                </div>
-            ))}
+              ))}
             </div>
-        </>
+          </>
         )}
 
         {/* BONUS : ANALYTICS */}
         {viewMode === 'ANALYTICS' && stats && (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 animate-fade-in-up">
-                
-                {/* PIE CHART */}
-                <div className="bg-[#0F1629] p-8 rounded-[2rem] shadow-2xl border border-gray-800 flex flex-col items-center">
-                    <h3 className="text-xl font-bold text-white mb-2">Overall Occupancy</h3>
-                    <div className="h-64 w-full">
-                        <ResponsiveContainer width="100%" height="100%">
-                            <PieChart>
-                                <Pie 
-                                    data={pieData} 
-                                    cx="50%" cy="50%" 
-                                    innerRadius={60} 
-                                    outerRadius={80} 
-                                    paddingAngle={5} 
-                                    dataKey="value"
-                                >
-                                    {pieData.map((entry, index) => (
-                                        <Cell key={`cell-${index}`} fill={entry.color} stroke="none" />
-                                    ))}
-                                </Pie>
-                                <Tooltip 
-                                    contentStyle={{ backgroundColor: '#1A233A', border: '1px solid #374151', borderRadius: '10px', color: '#ffff' }} 
-                                />
-                                <Legend />
-                            </PieChart>
-                        </ResponsiveContainer>
-                    </div>
-                    <div className="mt-4 text-center">
-                        <p className="text-4xl font-bold text-white">{stats.systemStats.occupancyRate}%</p>
-                        <p className="text-gray-400 text-sm">Total Usage</p>
-                    </div>
-                </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 animate-fade-in-up">
 
-                {/* BAR CHART */}
-                <div className="bg-[#0F1629] p-8 rounded-[2rem] shadow-2xl border border-gray-800">
-                    <h3 className="text-xl font-bold text-white mb-6">Occupancy per Mall</h3>
-                    <div className="h-64 w-full">
-                        <ResponsiveContainer width="100%" height="100%">
-                            <BarChart data={stats.lotStats}>
-                                <XAxis dataKey="name" stroke="#9CA3AF" tick={{fill: '#9CA3AF'}} tickLine={false} axisLine={false} />
-                                <YAxis stroke="#9CA3AF" tick={{fill: '#9CA3AF'}} tickLine={false} axisLine={false} />
-                                <Tooltip 
-                                    contentStyle={{ backgroundColor: '#1A233A', border: '1px solid #374151', borderRadius: '10px', color: '#fff' }}
-                                    cursor={{fill: 'rgba(255,255,255,0.05)'}}
-                                />
-                                <Bar dataKey="occupied" name="Occupied" fill="#564DEA" radius={[4, 4, 0, 0]} />
-                                <Bar dataKey="capacity" name="Total Capacity" fill="#1F2937" radius={[4, 4, 0, 0]} />
-                            </BarChart>
-                        </ResponsiveContainer>
-                    </div>
-                </div>
-
-                {/* SUMMARY */}
-                <div className="col-span-1 md:col-span-2 grid grid-cols-3 gap-4">
-                    <div className="bg-[#1A233A] p-6 rounded-2xl border border-gray-700">
-                        <p className="text-gray-400 text-sm uppercase font-bold">Total Capacity</p>
-                        <p className="text-3xl font-bold text-white">{stats.systemStats.totalSlots}</p>
-                    </div>
-                    <div className="bg-[#1A233A] p-6 rounded-2xl border border-gray-700">
-                        <p className="text-emerald-400 text-sm uppercase font-bold">Total Available</p>
-                        <p className="text-3xl font-bold text-emerald-400">{stats.systemStats.totalAvailable}</p>
-                    </div>
-                    <div className="bg-[#1A233A] p-6 rounded-2xl border border-gray-700">
-                        <p className="text-red-400 text-sm uppercase font-bold">Total Occupied</p>
-                        <p className="text-3xl font-bold text-red-400">{stats.systemStats.totalOccupied}</p>
-                    </div>
-                </div>
+            {/* PIE CHART */}
+            <div className="bg-[#0F1629] p-8 rounded-[2rem] shadow-2xl border border-gray-800 flex flex-col items-center">
+              <h3 className="text-xl font-bold text-white mb-2">Overall Occupancy</h3>
+              <div className="h-64 w-full">
+                <ResponsiveContainer width="100%" height="100%">
+                  <PieChart>
+                    <Pie
+                      data={pieData}
+                      cx="50%" cy="50%"
+                      innerRadius={60}
+                      outerRadius={80}
+                      paddingAngle={5}
+                      dataKey="value"
+                      stroke="none"
+                    >
+                      {pieData.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={entry.color} stroke="none" />
+                      ))}
+                    </Pie>
+                    <Tooltip content={<CustomTooltip />} />
+                    <Legend />
+                  </PieChart>
+                </ResponsiveContainer>
+              </div>
+              <div className="mt-4 text-center">
+                <p className="text-4xl font-bold text-white">{stats.systemStats.occupancyRate}%</p>
+                <p className="text-gray-400 text-sm">Total Usage</p>
+              </div>
             </div>
+
+            {/* BAR CHART */}
+            <div className="bg-[#0F1629] p-8 rounded-[2rem] shadow-2xl border border-gray-800">
+              <h3 className="text-xl font-bold text-white mb-6">Occupancy per Mall</h3>
+              <div className="h-64 w-full">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={stats.lotStats}>
+                    <XAxis dataKey="name" stroke="#9CA3AF" tick={{ fill: '#9CA3AF' }} tickLine={false} axisLine={false} />
+                    <YAxis stroke="#9CA3AF" tick={{ fill: '#9CA3AF' }} tickLine={false} axisLine={false} />
+                    <Tooltip
+                      contentStyle={{ backgroundColor: '#1A233A', border: '1px solid #374151', borderRadius: '10px', color: '#fff' }}
+                      cursor={{ fill: 'rgba(255,255,255,0.05)' }}
+                    />
+                    <Bar dataKey="occupied" name="Occupied" fill="#564DEA" radius={[4, 4, 0, 0]} />
+                    <Bar dataKey="capacity" name="Total Capacity" fill="#1F2937" radius={[4, 4, 0, 0]} />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
+
+            {/* SUMMARY */}
+            <div className="col-span-1 md:col-span-2 grid grid-cols-3 gap-4">
+              <div className="bg-[#1A233A] p-6 rounded-2xl border border-gray-700">
+                <p className="text-gray-400 text-sm uppercase font-bold">Total Capacity</p>
+                <p className="text-3xl font-bold text-white">{stats.systemStats.totalSlots}</p>
+              </div>
+              <div className="bg-[#1A233A] p-6 rounded-2xl border border-gray-700">
+                <p className="text-emerald-400 text-sm uppercase font-bold">Total Available</p>
+                <p className="text-3xl font-bold text-emerald-400">{stats.systemStats.totalAvailable}</p>
+              </div>
+              <div className="bg-[#1A233A] p-6 rounded-2xl border border-gray-700">
+                <p className="text-red-400 text-sm uppercase font-bold">Total Occupied</p>
+                <p className="text-3xl font-bold text-red-400">{stats.systemStats.totalOccupied}</p>
+              </div>
+            </div>
+          </div>
         )}
       </main>
     </div>
