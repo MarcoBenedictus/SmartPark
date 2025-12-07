@@ -142,16 +142,15 @@ I have created a script allowing you to initialize and run the entire web withou
     * Enter your PostgreSQL username and password in the field.
 
 2.  **Install Dependencies (Root, Backend, & Frontend):**
-
-    *just incase Concurrently fails downloading through package*
+    ```
+    npm run install-all
+    ```
+    *if it doesn't work, run the following commands and redo the install-all command*
     ```
     npm init -y
     ```
     ```
     npm install concurrently --save-dev 
-    ```
-    ```
-    npm run install-all
     ```
 
 3.  **Initialize Database (Seed Data):**
@@ -167,5 +166,5 @@ I have created a script allowing you to initialize and run the entire web withou
 
 5.  **Access the App:**
     * Open `http://localhost:5173`
-    * **Admin Creds:** `admin@smartpark.com` / `secretpass99`
-    * **User Creds:** `user@smartpark.com` / `secretpass99`
+    * **Admin Credentials:** `admin@smartpark.com` / `secretpass99`
+    * **User Credentials:** `user@smartpark.com` / `secretpass99`
