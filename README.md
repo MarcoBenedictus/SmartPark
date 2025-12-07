@@ -110,6 +110,8 @@ If given another week, I would:
 
 5. **Custom Warning UIs:** Currently the only UI that is Custom is the Warning for the Admin to avoid Overriding Reserved Data, while the rest of the Warnings on the Frontend uses the built-in Alert Warning.
 
+6. **A more Advanced Slot Deleting System:** Currently, Slot Deleting deletes the slots from the very end (e.g 1-20 slots, delete 5, then slot 20-16 will be deleted) without checking the Reservation or Occupancy Status.
+
 ## 6. API Design (RESTful)
 
 The API follows standard REST architectural styles. It uses HTTP verbs (GET, POST, PUT, DELETE) to perform CRUD operations and returns data in JSON format.
