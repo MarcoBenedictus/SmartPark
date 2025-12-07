@@ -1,0 +1,30 @@
+# Dependencies
+node_modules/
+package-lock.json 
+
+# Environment 
+.env
+.env.local
+.env.*.local
+backend/.env
+frontend/.env
+
+# Build Outputs (Vite/React)
+dist/
+build/
+out/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+logs
+*.log
+
+# OS System Files
+.DS_Store
+Thumbs.db
+
+# Editor/IDE Config
+.vscode/
+.idea/
