@@ -7,7 +7,7 @@ SmartPark is a web app designed to manage parking availability in real time. It 
 
 ### Why Relational (PostgreSQL)?
 I chose a relational database (PostgreSQL) because the data structure is strictly hierarchical and requires referential integrity for the interaction between tables.
-* A **Parking Slot** cannot exist without a **Parking Lot**.
+* A **Parking Slot** cannot exist without a **Parking Lot**. AND is strictly connected to it. 
 * This is a **One to Many** relationship and best enforced by SQL foreign keys, ensuring that if a Lot is deleted, then it's Slots are to be cascaded correctly too.
 
 ### Database Schema
@@ -40,6 +40,7 @@ I chose a relational database (PostgreSQL) because the data structure is strictl
 
 ### Frontend: React + Tailwind CSS + Recharts + Vite
 * **React:** The component-based architecture allowed me to reuse components, in this case, the `Slot` component across the Grid View.
+For the states, I chose Local State (useState) over global state libraries like Redux. Primarily because The application state (list of slots) is frequently refreshed from the server (polling). Using something like Redux would introduce unnecessary complexity for data that renews every 2 seconds.
 * **Tailwind CSS:** Enabled rapid UI development, and avoids clumping up the CSS file mainly because of it's "Built in" nature.
 * **Recharts:** Mainly used for the Analytics Dashboard.
 * **Vite:** To help with development process, simply because it allows real time updates to the Frontend UI without refreshing the page multiple times.
@@ -118,7 +119,7 @@ The API follows standard REST architectural styles. It uses HTTP verbs (GET, POS
 
 | Method | Endpoint | Access | Description | Example JSON Payload |
 | :--- | :--- | :--- | :--- | :--- |
-| `POST`   | `/api/auth/register`             | Public | Register new User/Admin        | `{"email": "user@test.com", "password": "123", "role": "USER"}` |
+| `POST`   | `/api/auth/register`             | Public | Register new User/Admin        | `{"email": "user@test.com", "password": "123"}` |
 | `POST`   | `/api/auth/login`                | Public | Login & Get Token              | `{"email": "user@test.com", "password": "123"}` |
 | `GET`    | `/api/parking/lots`              | Public | Fetch all lots & slots         | *empty* |
 | `POST`   | `/api/parking/lots`              | Admin  | Create new Lot                 | `{"name": "test", "capacity": 20}` |
