@@ -19,13 +19,13 @@ const seedDatabase = async () => {
         console.log('Users created (password: secretpass99)');
 
         // create parking lots
-        const mallA = await db.ParkingLot.create({ name: 'Mall A - Floor 1', capacity: 20 });
-        const mallB = await db.ParkingLot.create({ name: 'Mall B - Basement', capacity: 20 });
+        const mallA = await db.ParkingLot.create({ name: 'Mall A - Basement', capacity: 15 });
+        const mallB = await db.ParkingLot.create({ name: 'Mall B - Floor 1', capacity: 10 });
         console.log('malls (floors) created.');
 
         // create slots for mall A (20 slots)
         const slotsA = [];
-        for (let i = 1; i <= 20; i++) {
+        for (let i = 1; i <= 15; i++) {
             slotsA.push({
                 slot_number: `${mallA.id}-${i}`,
                 status: 'AVAILABLE',
@@ -35,7 +35,7 @@ const seedDatabase = async () => {
 
         // create slots for mall B (20 slots)
         const slotsB = [];
-        for (let i = 1; i <= 20; i++) {
+        for (let i = 1; i <= 10; i++) {
             slotsB.push({
                 slot_number: `${mallB.id}-${i}`,
                 status: 'AVAILABLE',
