@@ -1,0 +1,26 @@
+{
+  "name": "smartpark",
+  "version": "1.0.0",
+  "description": "this is a case study for my fullstack job application, a take home test",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "install-all": "npm install && cd backend && npm install && cd ../frontend && npm install",
+    "seed": "cd backend && npm run seed",
+    "start": "concurrently \"cd backend && npm run dev\" \"cd frontend && npm run dev\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MarcoBenedictus/SmartPark.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MarcoBenedictus/SmartPark/issues"
+  },
+  "homepage": "https://github.com/MarcoBenedictus/SmartPark#readme",
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  }
+}
