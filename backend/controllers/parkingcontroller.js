@@ -207,6 +207,16 @@ exports.bookSlot = async (req, res) => {
     const { id } = req.params;
     const userId = req.user.id; // user token
 
+    const existingBooking = await db.ParkingSlot.findOne({
+      where: { reservedBy: userId }
+    });
+
+    if (existingBooking) {
+      return res.status(400).json({
+        message: `You already have an active slot (${existingBooking.slot_number}). Please check out first.`
+      });
+    }
+
     const slot = await db.ParkingSlot.findByPk(id);
     if (!slot) return res.status(404).json({ message: "Slot not found" });
 
