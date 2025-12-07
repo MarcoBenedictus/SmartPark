@@ -16,7 +16,7 @@ exports.verifyToken = (req, res, next) => {
   try {
     const verified = jwt.verify(token, JWT_SECRET);
     req.user = verified; // Attach the user data (id, role) to the request object
-    next(); // PASS: Go to the next step
+    next(); // Go to the next step
   } catch (err) {
     res.status(400).json({ message: "Invalid Token" });
   }
@@ -25,7 +25,7 @@ exports.verifyToken = (req, res, next) => {
 // verify that the user is admin
 exports.verifyAdmin = (req, res, next) => {
   if (req.user && req.user.role === 'ADMIN') {
-    next(); // PASS: You are the boss
+    next(); // you're the boss
   } else {
     res.status(403).json({ message: "Access Denied: Admins Only" }); 
   }
