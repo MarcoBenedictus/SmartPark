@@ -173,7 +173,7 @@ I have created a script allowing you to initialize and run the entire web withou
 
 ### API Test Collection
 We have provided a Postman collection to test all API endpoints (Auth, CRUD, Booking, Analytics).
-* **[Download Postman Collection:](./SmartPark_API.postman_collection.json)**
+* **[Download Postman Collection](./SmartPark_API.postman_collection.json)**
 * *Instructions:* Import this file into Postman to see all pre-configured requests.
 
 ### Functional Demo
