@@ -370,95 +370,93 @@ const Dashboard = () => {
 
             {/* LOTS LOOP */}
             <div className="space-y-8">
-              {lots.map((lot) => (
-                <div key={lot.id} className="bg-[#0F1629] rounded-[2rem] shadow-2xl border border-gray-800 overflow-hidden">
+              {lots.map((lot) => {
+                // Calculate available slots
+                const availableCount = lot.slots ? lot.slots.filter(s => s.status === 'AVAILABLE').length : 0;
 
-                  {/* HEADER */}
-                  <div className="bg-[#131b31] px-6 py-5 border-b border-gray-800 flex justify-between items-center">
+                return (
+                  <div key={lot.id} className="bg-[#0F1629] rounded-[2rem] shadow-2xl border border-gray-800 overflow-hidden">
 
-                    {editingId === lot.id ? (
-                      // EDIT MODE
-                      <div className="flex gap-2 items-center w-full">
-                        <input
-                          className={inputStyle}
-                          value={editName}
-                          onChange={e => setEditName(e.target.value)}
-                        />
-                        <input
-                          className={`w-24 ${inputStyle}`}
-                          type="number"
-                          value={editCapacity}
-                          onChange={e => setEditCapacity(e.target.value)}
-                        />
-                        <button onClick={() => saveEdit(lot.id)} className="bg-emerald-500 text-white px-4 py-2 rounded-xl text-sm hover:bg-emerald-600 transition-colors">Save</button>
-                        <button onClick={() => setEditingId(null)} className="text-gray-400 hover:text-white text-sm px-2">Cancel</button>
-                      </div>
-                    ) : (
-                      // VIEW MODE
-                      <h2 className="text-xl font-bold text-white flex items-center gap-3">
-                        🏬 {lot.name}
-                        <span className="text-xs font-normal text-gray-400 bg-[#1A233A] border border-gray-700 px-3 py-1 rounded-full">
-                          Capacity: {lot.capacity}
-                        </span>
-                      </h2>
-                    )}
+                    {/* HEADER */}
+                    <div className="bg-[#131b31] px-6 py-5 border-b border-gray-800 flex justify-between items-center">
 
-                    {/* ACTION BUTTONS */}
-                    {isAdmin && editingId !== lot.id && (
-                      <div className="flex gap-2">
-                        <button
-                          onClick={() => startEditing(lot)}
-                          className="text-[#564DEA] hover:bg-[#564DEA]/10 px-3 py-2 rounded-lg border border-[#564DEA]/30 text-sm transition-all"
-                        >
-                          ✏️ Edit
-                        </button>
-                        <button
-                          onClick={() => handleDeleteLot(lot.id)}
-                          className="text-red-400 hover:bg-red-500/10 px-3 py-2 rounded-lg border border-red-500/30 text-sm transition-all"
-                        >
-                          🗑️ Delete
-                        </button>
-                      </div>
-                    )}
-                  </div>
+                      {editingId === lot.id ? (
+                        // EDIT MODE
+                        <div className="flex gap-2 items-center w-full">
+                          <input
+                            className={inputStyle}
+                            value={editName}
+                            onChange={e => setEditName(e.target.value)}
+                          />
+                          <input
+                            className={`w-24 ${inputStyle}`}
+                            type="number"
+                            value={editCapacity}
+                            onChange={e => setEditCapacity(e.target.value)}
+                          />
+                          <button onClick={() => saveEdit(lot.id)} className="bg-emerald-500 text-white px-4 py-2 rounded-xl text-sm hover:bg-emerald-600 transition-colors">Save</button>
+                          <button onClick={() => setEditingId(null)} className="text-gray-400 hover:text-white text-sm px-2">Cancel</button>
+                        </div>
+                      ) : (
+                        // VIEW MODE
+                        <h2 className="text-xl font-bold text-white flex items-center gap-3">
+                          🏬 {lot.name}
+                          <span className="text-xs font-normal text-gray-400 bg-[#1A233A] border border-gray-700 px-3 py-1 rounded-full">
+                            Available: {availableCount} / {lot.capacity}
+                          </span>
+                        </h2>
+                      )}
 
-                  {/* SLOTS CONTAINER */}
-                  <div className="p-8">
-                    <div className="flex flex-wrap justify-center gap-3">
-                      {lot.slots && lot.slots.map((slot) => {
-                        const isMySlot = slot.reservedBy === myId;
-                        const canInteract = isAdmin || slot.status === 'AVAILABLE' || isMySlot;
-
-                        return (
+                      {/* ACTION BUTTONS */}
+                      {isAdmin && editingId !== lot.id && (
+                        <div className="flex gap-2">
                           <button
-                            key={slot.id}
-                            onClick={() => handleSlotAction(slot)}
-                            disabled={!canInteract}
-
-                            className={`
-                            h-24 
-                            w-[calc(20%-0.75rem)] lg:w-[calc(10%-0.75rem)]
-                            rounded-xl flex flex-col items-center justify-center border transition-all duration-300 relative overflow-hidden
-                            ${getSlotStyles(slot)}
-                            ${canInteract ? 'hover:scale-105 cursor-pointer' : 'cursor-not-allowed opacity-40'}
-                            `}
+                            onClick={() => startEditing(lot)}
+                            className="text-[#564DEA] hover:bg-[#564DEA]/10 px-3 py-2 rounded-lg border border-[#564DEA]/30 text-sm transition-all"
                           >
-                            <span className="text-sm font-bold tracking-widest opacity-80">{slot.slot_number}</span>
-
-                            <div className="mt-2 text-4xl">
-                              {getSlotIcon(slot)}
-                            </div>
-
-                            <span className="text-[10px] uppercase font-bold mt-1 tracking-wider opacity-90">
-                              {getSlotLabel(slot)}
-                            </span>
+                            ✏️ Edit
                           </button>
-                        );
-                      })}
+                          <button
+                            onClick={() => handleDeleteLot(lot.id)}
+                            className="text-red-400 hover:bg-red-500/10 px-3 py-2 rounded-lg border border-red-500/30 text-sm transition-all"
+                          >
+                            🗑️ Delete
+                          </button>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* SLOTS CONTAINER */}
+                    <div className="p-8">
+                      <div className="flex flex-wrap justify-center gap-3">
+                        {lot.slots && lot.slots.map((slot) => {
+                          const isMySlot = slot.reservedBy === myId;
+                          const canInteract = isAdmin || slot.status === 'AVAILABLE' || isMySlot;
+
+                          return (
+                            <button
+                              key={slot.id}
+                              onClick={() => handleSlotAction(slot)}
+                              disabled={!canInteract}
+                              className={`
+                                h-24 
+                                w-[calc(20%-0.75rem)] lg:w-[calc(10%-0.75rem)]
+                                rounded-xl flex flex-col items-center justify-center border transition-all duration-300 relative overflow-hidden
+                                ${getSlotStyles(slot)}
+                                ${canInteract ? 'hover:scale-105 cursor-pointer' : 'cursor-not-allowed opacity-40'}
+                              `}
+                            >
+                              <span className="text-sm font-bold tracking-widest opacity-80">{slot.slot_number}</span>
+                              <div className="mt-2 text-4xl">{getSlotIcon(slot)}</div>
+                              <span className="text-[10px] uppercase font-bold mt-1 tracking-wider opacity-90">{getSlotLabel(slot)}</span>
+                            </button>
+                          );
+                        })}
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </>
         )}
