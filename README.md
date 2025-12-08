@@ -84,7 +84,7 @@ I implemented an error handling strategy as such:
 
 1. **Problem:** The MVP required users to see updates "in real-time," but setting up a full WebSocket (Socket.io) server adds significant complexity for a prototype.
 
-2. **Solution:** I implemented Short Polling System using setInterval (2000ms or 2 seconds) in the React useEffect hook. This is so the dashboard stays synced with the database with minimum server overhead.
+2. **Solution:** I implemented Short Polling System using setInterval (2000ms or 2 seconds) in the React useEffect hook. This is so the dashboard stays synced with the database with minimum server overhead. (and because this is essentially just a local web, so i didn't really think implementing Socket is necessary)
 
 ### Challenge 2: Data Consistency & Sorting
 
@@ -101,17 +101,15 @@ I implemented an error handling strategy as such:
 ### Future Improvements / Refactoring
 If given another week, I would:
 
-1. **Replace Polling with Socket.io:** To make the app more foolproof and truly event-driven and reduce HTTP request load.
+1. **Replace Polling with Socket.io:** To make the app more foolproof and truly event-driven and reduce HTTP request load. 
 
-2. **Unit Testing:** Implement Jest and Supertest to automate API testing instead of the manual Postman checks.
+2. **Payment Gateway:** Integrate Stripe in the checkOut controller to calculate fees based on duration.
 
-3. **Payment Gateway:** Integrate Stripe in the checkOut controller to calculate fees based on duration.
+3. **Better Identification:** Perhaps a better Identification System than a mere Email Address, this would ensure that a User cannot mass create Accounts to Clog Up the Slots.
 
-4. **Better Identification:** Perhaps a better Identification System than a mere Email Address, this would ensure that a User cannot mass create Accounts to Clog Up the Slots.
+4. **Custom Warning UIs:** Currently the only UI that is Custom is the Warning for the Admin to avoid Overriding Reserved Data, while the rest of the Warnings on the Frontend uses the built-in Alert Warning.
 
-5. **Custom Warning UIs:** Currently the only UI that is Custom is the Warning for the Admin to avoid Overriding Reserved Data, while the rest of the Warnings on the Frontend uses the built-in Alert Warning.
-
-6. **A more Advanced Slot Deleting System:** Currently, Slot Deleting deletes the slots from the very end (e.g 1-20 slots, delete 5, then slot 20-16 will be deleted) without checking the Reservation or Occupancy Status.
+5. **A more Advanced Slot Deleting System:** Currently, Slot Deleting deletes the slots from the very end (e.g 1-20 slots, delete 5, then slot 20-16 will be deleted) without checking the Reservation or Occupancy Status.
 
 ## 6. API Design (RESTful)
 
@@ -180,4 +178,7 @@ We have provided a Postman collection to test all API endpoints (Auth, CRUD, Boo
 * *Instructions:* Import this file into Postman to see all pre-configured requests.
 
 ### Functional Demo
-[Soon]
+* **[Soon](https://youtu.be/A_F-cxWMr6E)**
+
+### Partial UI Link
+* **[Canva Link](https://www.canva.com/design/DAG6vJ9BiCs/0X7xbuEbAKk1DB6a9ovA8g/edit?utm_content=DAG6vJ9BiCs&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)**
