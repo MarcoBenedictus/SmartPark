@@ -177,8 +177,8 @@ We have provided a Postman collection to test all API endpoints (Auth, CRUD, Boo
 * **[Download Postman Collection](./SmartPark_API.postman_collection.json)**
 * *Instructions:* Import this file into Postman to see all pre-configured requests.
 
-### Functional Demo
-* **[Soon](https://youtu.be/A_F-cxWMr6E)**
+### Functional Demo Video
+* **[YouTube Link to Explanation](https://youtu.be/A_F-cxWMr6E)**
 
-### Partial UI Link
+### UI Link
 * **[Canva Link](https://www.canva.com/design/DAG6vJ9BiCs/0X7xbuEbAKk1DB6a9ovA8g/edit?utm_content=DAG6vJ9BiCs&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)**
