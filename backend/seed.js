@@ -23,7 +23,7 @@ const seedDatabase = async () => {
         const mallB = await db.ParkingLot.create({ name: 'Mall B - Floor 1', capacity: 10 });
         console.log('malls (floors) created.');
 
-        // create slots for mall A (20 slots)
+        // create slots for mall A (15 slots)
         const slotsA = [];
         for (let i = 1; i <= 15; i++) {
             slotsA.push({
@@ -33,7 +33,7 @@ const seedDatabase = async () => {
             });
         }
 
-        // create slots for mall B (20 slots)
+        // create slots for mall B (10 slots)
         const slotsB = [];
         for (let i = 1; i <= 10; i++) {
             slotsB.push({
